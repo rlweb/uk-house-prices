@@ -1,21 +1,11 @@
-name: Initial Setup - Grabs all UK house price data and pushes to big query via Google Storage
-
+name: Initial Setup - Create table and push complete dataset to it
 on:
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Authenticate on Google Cloud
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          version: '290.0.1'
-          service_account_email: ${{ secrets.GKE_EMAIL }}
-          service_account_key: ${{ secrets.GKE_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          export_default_credentials: true
 
       - name: Make the table if it doesn't exist
         run: |
@@ -26,8 +16,11 @@ jobs:
         run: curl -L http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-complete.csv | sed 's/ 00\:00//g' >> pp-complete.csv
 
       - name: Push file to Google Storage
-        run: |
-          gsutil mv pp-complete.csv gs://uk-house-price-data/pp-complete.csv
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          credentials: ${{ secrets.GKE_KEY }}
+          path: pp-complete.csv
+          destination: uk-house-price-data/pp-complete.csv
 
       - name: Now load the data into BigQuery
         run: |
