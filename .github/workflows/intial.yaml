@@ -29,7 +29,6 @@ jobs:
         run: |
           gsutil mv pp-complete.csv gs://uk-house-price-data/pp-complete.csv
 
-
       - name: Now load the data into BigQuery
         run: |
-          bq load ${{ secrets.GCP_PROJECT_ID }}:uk_house_price_data.test pp-complete.csv
+          bq load ${{ secrets.GCP_PROJECT_ID }}:uk_house_price_data.test gs://uk-house-price-data/pp-complete.csv
