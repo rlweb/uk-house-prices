@@ -1,0 +1,27 @@
+name: Daily Action - to get latest data (updated monthly)
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Make the table if it doesn't exist
+        run: |
+          bq mk --schema=big-query-schema.json -t uk_house_price_data.all_data
+
+      - name: Download complete property price data file and remove time
+        # Time removed as it doesn't include seconds and BigQuery requires seconds
+        run: curl -L http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-complete.csv | sed 's/ 00\:00//g' >> pp-complete.csv
+
+      - name: Push file to Google Storage
+        uses: google-github-actions/upload-cloud-storage@main
+        with:
+          credentials: ${{ secrets.GKE_KEY }}
+          path: pp-complete.csv
+          destination: uk-house-price-data/pp-complete.csv
+
+      - name: Now load the data into BigQuery
+        run: |
+          bq load ${{ secrets.GCP_PROJECT_ID }}:uk_house_price_data.all_data gs://uk-house-price-data/pp-complete.csv
