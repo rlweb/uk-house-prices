@@ -1,9 +1,9 @@
 name: Daily Action - to get latest data (updated monthly)
 
 on:
-  workflow_dispatch:
-#  schedule:
-#    - cron: '30 6 * * 1-5'
+#  workflow_dispatch: # Useful for testing!
+  schedule:
+    - cron: '30 6 * * 1-5'
 jobs:
   build:
     runs-on: ubuntu-latest
