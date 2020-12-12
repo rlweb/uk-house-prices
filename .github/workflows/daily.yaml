@@ -16,8 +16,9 @@ jobs:
         run: |
           curl -L http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-monthly-update-new-version.csv | sed 's/ 00\:00//g' >> pp-monthly-update-new-version.csv
           FIRST_TRANSACTION_ID=$(head -n 1 pp-monthly-update-new-version.csv | cut -d, -f1 | sed 's/^\"\(.*\)\"$/\1/')
-          COUNT=$(echo "select count(*) from uk_house_price_data.all_data where transaction_id = '$FIRST_TRANSACTION_ID'" | bq --format=json query | jq .[0].f0_)
+          echo $FIRST_TRANSACTION_ID
+          JSON=$(echo "select count(*) from uk_house_price_data.all_data where transaction_id = '$FIRST_TRANSACTION_ID'" | bq --format=json query)
+          echo $JSON
           # Have we got an already existing record? If so, stop otherwise upload new data!
-          if [ "$COUNT" = "1" ]; then exit 0 fi
-          gsutil mv pp-monthly-update-new-version.csv gs://uk-house-price-data/pp-monthly-update-new-version.csv
-          bq load ${{ secrets.GCP_PROJECT_ID }}:uk_house_price_data.all_data gs://uk-house-price-data/pp-monthly-update-new-version.csv
+          # this is horrible but works for now!
+          echo $JSON | jq -e '.[]|select(.f0_ == "0") | length == 1' && gsutil mv pp-monthly-update-new-version.csv gs://uk-house-price-data/pp-monthly-update-new-version.csv && bq load ${{ secrets.GCP_PROJECT_ID }}:uk_house_price_data.all_data gs://uk-house-price-data/pp-monthly-update-new-version.csv
