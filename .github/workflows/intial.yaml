@@ -18,8 +18,7 @@ jobs:
 
       - name: Make the table if it doesn't exist
         run: |
-          set -e
-          bq mk --schema=big-query-schema.json -t uk_house_price_data.all_data || true
+          bq mk --schema=big-query-schema.json -t uk_house_price_data.all_data
 
       - name: Download complete property price data file and remove time
         # Time removed as it doesn't include seconds and BigQuery requires seconds
@@ -31,4 +30,4 @@ jobs:
 
       - name: Now load the data into BigQuery
         run: |
-          bq load ${{ secrets.GCP_PROJECT_ID }}:uk_house_price_data.test gs://uk-house-price-data/pp-complete.csv
+          bq load ${{ secrets.GCP_PROJECT_ID }}:uk_house_price_data.all_data gs://uk-house-price-data/pp-complete.csv
