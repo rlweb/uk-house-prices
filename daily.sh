@@ -8,7 +8,7 @@ echo $?
 echo $?
 echo $?
 
-if gsutil hash gs://uk-house-price-data/pp-monthly-update-new-version.csv ./pp-monthly-update-new-version.csv; then
+if ! gsutil hash gs://uk-house-price-data/pp-monthly-update-new-version.csv ./pp-monthly-update-new-version.csv; then
   gsutil mv pp-monthly-update-new-version.csv gs://uk-house-price-data/pp-monthly-update-new-version.csv
   bq load uk_house_price_data.all_data gs://uk-house-price-data/pp-monthly-update-new-version.csv
 fi
