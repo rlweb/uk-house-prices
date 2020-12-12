@@ -23,11 +23,7 @@ jobs:
 
       - name: Download complete property price data file and remove time
         # Time removed as it doesn't include seconds and BigQuery requires seconds
-        run: |
-          curl \
-          -L \ # follow redirects
-          http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-complete.csv \
-          | sed 's/ 00\:00//g' >> pp-complete.csv
+        run: curl -L http://prod.publicdata.landregistry.gov.uk.s3-website-eu-west-1.amazonaws.com/pp-complete.csv | sed 's/ 00\:00//g' >> pp-complete.csv
 
       - name: Push file to Google Storage
         run: |
