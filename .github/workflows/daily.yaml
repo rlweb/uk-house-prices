@@ -18,6 +18,9 @@ jobs:
           FIRST_TRANSACTION_ID=$(head -n 1 pp-monthly-update-new-version.csv | cut -d, -f1 | sed 's/^\"\(.*\)\"$/\1/')
           echo $FIRST_TRANSACTION_ID
           JSON=$(echo "select count(*) from uk_house_price_data.all_data where transaction_id = '$FIRST_TRANSACTION_ID'" | bq --format=json query)
+          echo $JSON
+          echo $JSON | grep "\[{\"f0_\":\"1\"" &>/dev/null
+          echo $?
           # Have we got an already existing record? If so, stop otherwise upload new data!
           # this is horrible but works for now!
           echo $JSON | grep "\[{\"f0_\":\"1\"" &>/dev/null || gsutil mv pp-monthly-update-new-version.csv gs://uk-house-price-data/pp-monthly-update-new-version.csv && bq load ${{ secrets.GCP_PROJECT_ID }}:uk_house_price_data.all_data gs://uk-house-price-data/pp-monthly-update-new-version.csv
