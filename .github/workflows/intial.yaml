@@ -7,11 +7,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Authenticate on Google Cloud
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@master
         with:
-          version: '290.0.1'
-          service_account_email: ${{ secrets.GKE_EMAIL }}
           service_account_key: ${{ secrets.GKE_KEY }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           export_default_credentials: true
@@ -27,7 +24,6 @@ jobs:
       - name: Push file to Google Storage
         uses: google-github-actions/upload-cloud-storage@main
         with:
-          credentials: ${{ secrets.GKE_KEY }}
           path: pp-complete.csv
           destination: uk-house-price-data/pp-complete.csv
 
