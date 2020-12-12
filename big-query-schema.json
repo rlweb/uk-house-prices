@@ -1,0 +1,18 @@
+[
+  {"name": "transaction_id","type": "STRING","mode": "REQUIRED"},
+  {"name": "amount","type": "INTEGER","mode": "REQUIRED"},
+  {"name": "date","type": "DATE","mode": "REQUIRED"},
+  {"name": "postcode","type": "STRING","mode": "REQUIRED"},
+  {"name": "property_type","type": "STRING","mode": "REQUIRED"},
+  {"name": "new_build","type": "STRING","mode": "REQUIRED"},
+  {"name": "estate_type","type": "STRING","mode": "REQUIRED"},
+  {"name": "paon","type": "STRING","mode": "REQUIRED"},
+  {"name": "saon","type": "STRING","mode": "REQUIRED"},
+  {"name": "street","type": "STRING","mode": "REQUIRED"},
+  {"name": "locality","type": "STRING","mode": "REQUIRED"},
+  {"name": "town_city","type": "STRING","mode": "REQUIRED"},
+  {"name": "district","type": "STRING","mode": "REQUIRED"},
+  {"name": "county","type": "STRING","mode": "REQUIRED"},
+  {"name": "transaction_category","type": "STRING","mode": "REQUIRED"},
+  {"name": "record_type","type": "STRING","mode": "REQUIRED"}
+]
